@@ -21,7 +21,8 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
         if (user.getPassword() == null || user.getPassword()
                 .length() < MIN_LENGTH) {
-            throw new RegistrationFailException("Password must be greater or equal than 6 characters");
+            throw new RegistrationFailException(
+                    "Password must be greater or equal than 6 characters");
         }
         if (user.getAge() == null || user.getAge() < MIN_AGE) {
             throw new RegistrationFailException("Age must be greater or equal than 18");
