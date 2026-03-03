@@ -2,6 +2,7 @@ package core.basesyntax.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import core.basesyntax.db.Storage;
 import core.basesyntax.exceptions.RegistrationFailException;
@@ -26,6 +27,7 @@ class RegistrationServiceImplTest {
         actual.setLogin("JamesS");
         User result = new RegistrationServiceImpl().register(actual);
         assertEquals("JamesS", result.getLogin());
+        assertTrue(Storage.people.contains(actual));
     }
 
     @Test
@@ -63,6 +65,13 @@ class RegistrationServiceImplTest {
     }
 
     @Test
+    void register_ageLessZero_notOk() {
+        actual.setAge(-1);
+        assertThrows(RegistrationFailException.class,
+                () -> new RegistrationServiceImpl().register(actual));
+    }
+
+    @Test
     void register_passwordNull_notOk() {
         actual.setPassword(null);
         assertThrows(RegistrationFailException.class,
@@ -81,6 +90,8 @@ class RegistrationServiceImplTest {
         actual.setPassword("passw1");
         User result = new RegistrationServiceImpl().register(actual);
         assertEquals("passw1", result.getPassword());
+        assertTrue(Storage.people.contains(actual));
+
     }
 
     @Test
@@ -108,6 +119,7 @@ class RegistrationServiceImplTest {
     void register_age_Ok() {
         actual.setAge(18);
         User result = new RegistrationServiceImpl().register(actual);
+        assertTrue(Storage.people.contains(actual));
         assertEquals(18, result.getAge());
     }
 
@@ -118,7 +130,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_userExisting_notOk() {
-        new RegistrationServiceImpl().register(actual);
+        Storage.people.add(actual);
         assertThrows(RegistrationFailException.class,
                 () -> new RegistrationServiceImpl().register(actual));
     }

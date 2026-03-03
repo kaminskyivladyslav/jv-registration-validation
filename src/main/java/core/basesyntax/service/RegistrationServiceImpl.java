@@ -6,6 +6,8 @@ import core.basesyntax.exceptions.RegistrationFailException;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
+    private static final int MIN_LENGTH = 6;
+    private static final int MIN_AGE = 18;
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
@@ -14,15 +16,15 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationFailException("User cannot be null");
         }
         if (user.getLogin() == null || user.getLogin()
-                .length() < 6) {
-            throw new RegistrationFailException("Login must be greater than 6 characters");
+                .length() < MIN_LENGTH) {
+            throw new RegistrationFailException("Login must be greater or equal than 6 characters");
         }
         if (user.getPassword() == null || user.getPassword()
-                .length() < 6) {
-            throw new RegistrationFailException("Password must be greater than 6 characters");
+                .length() < MIN_LENGTH) {
+            throw new RegistrationFailException("Password must be greater or equal than 6 characters");
         }
-        if (user.getAge() == null || user.getAge() < 18) {
-            throw new RegistrationFailException("Age must be greater than 18");
+        if (user.getAge() == null || user.getAge() < MIN_AGE) {
+            throw new RegistrationFailException("Age must be greater or equal than 18");
         }
         if (storageDao.get(user.getLogin()) != null) {
             throw new RegistrationFailException("Login already exists");
